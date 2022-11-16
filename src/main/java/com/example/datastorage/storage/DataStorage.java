@@ -23,9 +23,9 @@ public class DataStorage {
     }
 
     public Student getByID(long id){
-        for (Student st : data) {
-            if (st.getId() == id ){
-                return st;
+        for (Student student : data) {
+            if (student.getId() == id) {
+                return student;
             }
         }
         return null;
@@ -35,15 +35,16 @@ public class DataStorage {
         data.removeIf(st -> st.getId() == id);
     }
 
-    public Student update(Student student){
-        Student newStudent = new Student();
-        if (data.contains(student)){
-            newStudent.setId(student.getId());
-            newStudent.setName(student.getName());
-            newStudent.setSurname(student.getSurname());
-            newStudent.setAge(student.getAge());
-            data.set(data.indexOf(student), student);
+    public Student update(long id, Student student){
+        Student studentById = this.getByID(id);
+        if (data.contains(studentById)) {
+            Student updatedStudent = data.get(data.indexOf(studentById));
+            updatedStudent.setName(student.getName());
+            updatedStudent.setSurname(student.getSurname());
+            updatedStudent.setAge(student.getAge());
+            return updatedStudent;
+        } else {
+            throw new RuntimeException("Student with id " + student.getId() + " not found");
         }
-        return newStudent;
     }
 }
