@@ -1,7 +1,7 @@
 package com.example.datastorage.controller;
 
 import com.example.datastorage.entity.Student;
-import com.example.datastorage.service.StudentService;
+import com.example.datastorage.service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class StudentController {
 
     @Autowired
-    private StudentService studentService;
+    private StudentServiceImpl studentService;
 
     @PostMapping
     public Student addStudent(@RequestBody Student student){
@@ -21,7 +21,10 @@ public class StudentController {
 
     @GetMapping("{id}")
     public Student getStudent(@PathVariable long id){
-        return studentService.getStudentById(id);
+        if (studentService.getStudentById(id) == null){
+            throw new RuntimeException("Student with id" + id + " does not exist!");
+        } else
+            return studentService.getStudentById(id);
     }
 
     @GetMapping
@@ -29,9 +32,9 @@ public class StudentController {
         return studentService.getStudents();
     }
 
-    @PutMapping
-    public Student updateStudent(Student student){
-        return studentService.updateStudent(student);
+    @PutMapping("{id}")
+    public Student updateStudent(@PathVariable long id, @RequestBody Student student){
+        return studentService.updateStudent(id, student);
     }
 
     @DeleteMapping("{id}")
